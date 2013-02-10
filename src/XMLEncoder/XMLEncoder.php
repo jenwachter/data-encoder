@@ -28,7 +28,13 @@ class XMLEncoder
 	 */
 	protected $rss = null;
 
-	protected $linkKeys = array(
+	/**
+	 * These array keys will trigger a <link> element if the
+	 * value is not an array. Key: array key; Value: link rel.
+	 * 
+	 * @var array
+	 */
+	protected $linkTriggers = array(
 		"url" => "alternate",
 		"prev" => "prev",
 		"next" => "next",
@@ -43,6 +49,17 @@ class XMLEncoder
 		$this->data = $data;
 		$this->dom = new \DOMDocument("1.0", "utf-8");
 		$this->domHelper = new \XMLEncoder\Utilities\DOMHelper($this->dom);
+	}
+
+	/**
+	 * Add a keyword that would trigger a link element.
+	 * 
+	 * @param string $key Key that would trigger a link element
+	 * @param string $rel The "rel" value this trigger equates to
+	 */
+	protected function addLinkTrigger($key, $rel)
+	{
+		$this->linkTriggers[$key] = $rel;
 	}
 
 	/**
@@ -131,8 +148,8 @@ class XMLEncoder
 				$item = $this->domHelper->createElement($key, $bind);
 				$this->encodeArray($value, $item);
 			} else {
-				if (in_array($key, array_keys($this->linkKeys))) {
-					$rel = $this->linkKeys[$key];
+				if (in_array($key, array_keys($this->linkTriggers))) {
+					$rel = $this->linkTriggers[$key];
 					$this->domHelper->createElement("link", $bind, $value, array("rel" => $rel));
 				} else {
 					$this->domHelper->createElement($key, $bind, $value);
