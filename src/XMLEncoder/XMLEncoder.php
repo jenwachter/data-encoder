@@ -125,7 +125,7 @@ class XMLEncoder
 				$singular = !$this->hasSingularIdentifier($value) ? \XMLEncoder\Utilities\Inflector::singularize($key) : null;
 				$this->encodeArray($value, $item, $singular);
 			} else {
-				$item->appendChild($this->dom->createTextNode($value));
+				$this->domHelper->addText($value, $item);
 			}
 		}
 	}
