@@ -1,8 +1,8 @@
 {
-    "name": "jenwachter/xml-encoder",
+    "name": "jenwachter/data-encoder",
     "description": "A PHP library to make it easier to create XML using the DOM Document object.",
     "keywords": ["xml", "dom document", "rss"],
-    "homepage": "http://github.com/jenwachter/xml-encoder",
+    "homepage": "http://github.com/jenwachter/data-encoder",
     "license": "MIT",
     "authors": [
         {
