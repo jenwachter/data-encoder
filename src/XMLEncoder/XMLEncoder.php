@@ -29,6 +29,12 @@ class XMLEncoder
 	protected $rss = null;
 
 	/**
+	 * The RSS channel DOM object, if applicable
+	 * @var boolean
+	 */
+	protected $channel = null;
+
+	/**
 	 * These array keys will trigger a <link> element if the
 	 * value is not an array. Key: array key; Value: link rel.
 	 * 
@@ -44,7 +50,7 @@ class XMLEncoder
 	);
 
 
-	public function __construct($data)
+	public function __construct(array $data)
 	{
 		$this->data = $data;
 		$this->dom = new \DOMDocument("1.0", "utf-8");
@@ -72,20 +78,19 @@ class XMLEncoder
 	 *                               to include. "element" => "value"
 	 * @return self
 	 */
-	public function rss($title, $link, $description, $otherElements)
+	public function rss($title, $link, $description, array $otherElements = array())
 	{
 		$this->rss = $this->domHelper->createElement("rss", $this->dom, null, array("version" => "2.0"));
-		$channel = $this->domHelper->createElement("channel", $this->rss);
+		$this->channel = $this->domHelper->createElement("channel", $this->rss);
 
 		$channelElements = array(
 			"title" => $title,
 			"link" => $link,
 			"description" => $description
-		) + $otherElements;
+		);
 
-		foreach ($channelElements as $k => $v) {
-			$this->domHelper->createElement($k, $channel, $v);
-		}
+		$channelElements = array_merge($channelElements, $otherElements);
+		$this->addElements($channelElements, $this->channel);
 
 		return $this;
 	}
@@ -103,23 +108,29 @@ class XMLEncoder
 
 	protected function parse()
 	{
-		$bind = $this->rss ? $this->rss : $this->domHelper->createElement("feed", $this->dom);
-		$this->addElements($this->data, $bind);
+		if ($this->rss) {
+			$this->addElements($this->data, $this->channel, "item");
+		} else {
+			$bind = $this->domHelper->createElement("feed", $this->dom);
+			$this->addElements($this->data, $bind);
+		}
 	}
 
 	/**
 	 * Adds an array of elements to the DOM Document.
 	 * 
-	 * @param  array $array Associative array of keys and values
-	 * @param  object $bind Parent object to bind the new element to
+	 * @param  array  $array 	Associative array of keys and values
+	 * @param  object $bind 	Parent object to bind the new element to
+	 * @param  string $key 		Override the item's key (used for RSS)
 	 * @return null
 	 */
-	protected function addElements($array, $bind)
+	protected function addElements($array, $bind, $keyOverride = null)
 	{
 		foreach ($array as $key => $value) {
+			
+			$key = $keyOverride ? $keyOverride : $key;
 
 			$item = $this->domHelper->createElement($key, $bind);
-			// $item = $bind->appendChild($this->dom->createElement($key));
 
 			if (is_array($value)) {
 				$singular = !$this->hasSingularIdentifier($value) ? \XMLEncoder\Utilities\Inflector::singularize($key) : null;
@@ -142,7 +153,7 @@ class XMLEncoder
 		foreach ($array as $key => $value) {
 
 			$key = $singular ? $singular : $key;
-			$value = is_object($value) ? (array) $value : $value;
+			$value = is_object($value) ? $value : $value;
 
 			if (is_array($value)) {
 				$item = $this->domHelper->createElement($key, $bind);
