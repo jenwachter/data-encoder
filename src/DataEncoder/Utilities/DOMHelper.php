@@ -1,6 +1,6 @@
 <?php
 
-namespace XMLEncoder\Utilities;
+namespace DataEncoder\Utilities;
 
 class DOMHelper
 {

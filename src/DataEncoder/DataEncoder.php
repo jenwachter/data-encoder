@@ -1,8 +1,8 @@
 <?php
 
-namespace XMLEncoder;
+namespace DataEncoder;
 
-class XMLEncoder
+class DataEncoder
 {
 	/**
 	 * DOM Document object
@@ -54,7 +54,7 @@ class XMLEncoder
 	{
 		$this->data = $this->objectToArray($data);
 		$this->dom = new \DOMDocument("1.0", "utf-8");
-		$this->domHelper = new \XMLEncoder\Utilities\DOMHelper($this->dom);
+		$this->domHelper = new \DataEncoder\Utilities\DOMHelper($this->dom);
 	}
 
 	protected function objectToArray($data) {
@@ -146,7 +146,7 @@ class XMLEncoder
 			$item = $this->domHelper->createElement($key, $bind);
 
 			if (is_array($value)) {
-				$singular = !$this->hasSingularIdentifier($value) ? \XMLEncoder\Utilities\Inflector::singularize($key) : null;
+				$singular = !$this->hasSingularIdentifier($value) ? \DataEncoder\Utilities\Inflector::singularize($key) : null;
 				$this->encodeArray($value, $item, $singular);
 			} else {
 				$this->domHelper->addText($value, $item);

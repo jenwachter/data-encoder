@@ -1,6 +1,6 @@
-# XMLEncoder
+# DataEncoder
 
-A PHP library to make it easier to create XML using the DOM Document object.
+Eventually this library will be built out to do various types of data encoding. For now, only XML and RSS are available.
 
 ## XML Example
 
@@ -36,16 +36,16 @@ $data = array(
 );
 ```
 
-Then create a new XMLEncoder obejct, passing it the array as the only parameter. After that, it's as easy as calling the <code>render()</code> method.
+Then create a new DataEncoder obejct, passing it the array as the only parameter. After that, it's as easy as calling the <code>render()</code> method.
 
 ```php
-$xml = new \XMLEncoder\XMLEncoder($data);
+$xml = new \DataEncoder\DataEncoder($data);
 $xml->render();
 ```
 
 ## RSS Example
 
-The process for creating an RSS feed is very similar, except that the array passed to the XMLEncoder will be a numeric array filled with the items in the feed. Elements in the channel are handled with the <code>rss()</code> method.
+The process for creating an RSS feed is very similar, except that the array passed to the DataEncoder will be a numeric array filled with the items in the feed. Elements in the channel are handled with the <code>rss()</code> method.
 
 ```php
 $data = array(
@@ -75,7 +75,7 @@ $data = array(
 
 
 // Render $data as an RSS deed
-$xml = new \XMLEncoder\XMLEncoder($data);
+$xml = new \DataEncoder\DataEncoder($data);
 $moreChannelElements = array("something" => "something");
 $xml->rss("the title", "the link", "the desc", $moreChannelElements)->render();
 ```
