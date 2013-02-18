@@ -50,11 +50,24 @@ class XMLEncoder
 	);
 
 
-	public function __construct(array $data)
+	public function __construct($data)
 	{
-		$this->data = $data;
+		$this->data = $this->objectToArray($data);
 		$this->dom = new \DOMDocument("1.0", "utf-8");
 		$this->domHelper = new \XMLEncoder\Utilities\DOMHelper($this->dom);
+	}
+
+	protected function objectToArray($data) {
+		if (is_object($data)) {
+		    $data = get_object_vars($data);
+		}
+
+		if (is_array($data)) {
+			return array_map(array($this, "objectToArray"), $data);
+		}
+		else {
+			return $data;
+		}
 	}
 
 	/**
@@ -78,7 +91,7 @@ class XMLEncoder
 	 *                               to include. "element" => "value"
 	 * @return self
 	 */
-	public function rss($title, $link, $description, array $otherElements = array())
+	public function rss($title, $link, $description, $otherElements = array())
 	{
 		$this->rss = $this->domHelper->createElement("rss", $this->dom, null, array("version" => "2.0"));
 		$this->channel = $this->domHelper->createElement("channel", $this->rss);
