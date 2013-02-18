@@ -172,7 +172,7 @@ class XMLEncoder
 				$item = $this->domHelper->createElement($key, $bind);
 				$this->encodeArray($value, $item);
 			} else {
-				if (in_array($key, array_keys($this->linkTriggers))) {
+				if (!$this->rss && in_array($key, array_keys($this->linkTriggers))) {
 					$rel = $this->linkTriggers[$key];
 					$this->domHelper->createElement("link", $bind, $value, array("rel" => $rel));
 				} else {
