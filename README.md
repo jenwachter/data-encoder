@@ -49,26 +49,28 @@ The process for creating an RSS feed is very similar, except that the array pass
 
 ```php
 $data = array(
-	"id" => 123,
-	"title" => "This is the title",
-	"author" => array(
-		"firstName" => "John Doe",
-		"lastName" => "Wachter",
-		"title" => "Editor",
-		"url" => "http://www.somewebsite.com"
+	array(
+		"id" => 123,
+		"title" => "This is the title",
+		"author" => array(
+			"firstName" => "John Doe",
+			"lastName" => "Wachter",
+			"title" => "Editor",
+			"url" => "http://www.somewebsite.com"
+		),
+		"url" => "http://www.somewebsite.com/path/to/article"
 	),
-	"url" => "http://www.somewebsite.com/path/to/article"
-),
-array(
-	"id" => 124,
-	"title" => "This is the title of another article",
-	"author" => array(
-		"firstName" => "Jane",
-		"lastName" => "Doe",
-		"title" => "Editor",
-		"url" => "http://www.somewebsite.com"
-	),
-	"url" => "http://www.somewebsite.com/path/to/this/article"
+	array(
+		"id" => 124,
+		"title" => "This is the title of another article",
+		"author" => array(
+			"firstName" => "Jane",
+			"lastName" => "Doe",
+			"title" => "Editor",
+			"url" => "http://www.somewebsite.com"
+		),
+		"url" => "http://www.somewebsite.com/path/to/this/article"
+	)
 );
 
 
