@@ -136,21 +136,21 @@ class RSS extends XML
 
 
 	/**
-	 * [encodeArray description]
-	 * @param  [type] $array    [description]
-	 * @param  [type] $bind     [description]
-	 * @param  [type] $singular [description]
-	 * @return [type]           [description]
+	 * Adds a value to the DOM Document that is an array
+	 * 
+	 * @param  array $array     Array to encode
+	 * @param  object $bind 	Parent object to bind the new element to
+	 * @return null
 	 */
-	protected function encodeArray($array, $bind, $singular = null)
+	protected function encodeArray($array, $bind)
 	{
 		foreach ($array as $key => $value) {
 
-			if (!in_array($key, array_keys($this->dataMap))) {
+			$key = !empty($this->dataMap[$key]) ? $this->dataMap[$key] : $key;
+
+			if (!in_array($key, $this->itemElements)) {
 				continue;
 			}
-
-			$key = $this->dataMap[$key];
 
 			if (is_array($value)) {
 				$item = $this->domHelper->createElement($key, $bind);
