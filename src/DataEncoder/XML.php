@@ -119,15 +119,16 @@ class XML implements Interfaces\Encoder
 	/**
 	 * Adds a value to the DOM Document that is an array
 	 * 
-	 * @param  array $array Associative array of keys and values
-	 * @param  object $bind Parent object to bind the new element to
+	 * @param  array  $array 		Associative array of keys and values
+	 * @param  object $bind 		Parent object to bind the new element to
+	 * @param  string $keyOverride 	Key override
 	 * @return null
 	 */
-	protected function encodeArray($array, $bind, $singular = null)
+	protected function encodeArray($array, $bind, $keyOverride = null)
 	{
 		foreach ($array as $key => $value) {
 
-			$key = $singular ? $singular : $key;
+			$key = $keyOverride ? $keyOverride : $key;
 
 			if (is_array($value)) {
 				$item = $this->domHelper->createElement($key, $bind);
