@@ -4,5 +4,5 @@ namespace DataEncoder\Interfaces;
 
 interface Encoder
 {
-	public function encode();
+	public function render();
 }
