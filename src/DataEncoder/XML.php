@@ -96,7 +96,7 @@ class XML implements Interfaces\Encoder
 	 * 
 	 * @param  array  $array 	Associative array of keys and values
 	 * @param  object $bind 	Parent object to bind the new element to
-	 * @param  string $key 		Override the item's key (used for RSS)
+	 * @param  string $key 		Override the item's key
 	 * @return null
 	 */
 	protected function addElements($array, $bind, $keyOverride = null)

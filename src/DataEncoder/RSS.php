@@ -111,7 +111,7 @@ class RSS extends XML
 	 * 
 	 * @param  array  $array 	Associative array of keys and values
 	 * @param  object $bind 	Parent object to bind the new element to
-	 * @param  string $key 		Override the item's key (used for RSS)
+	 * @param  string $key 		Override the item's key
 	 * @return null
 	 */
 	protected function addElements($array, $bind, $keyOverride = null)
@@ -142,7 +142,7 @@ class RSS extends XML
 	 * @param  object $bind 	Parent object to bind the new element to
 	 * @return null
 	 */
-	protected function encodeArray($array, $bind)
+	protected function encodeArray($array, $bind, $keyOverride = null)
 	{
 		foreach ($array as $key => $value) {
 
