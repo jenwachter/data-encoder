@@ -2,7 +2,7 @@
 
 namespace DataEncoder\Utilities;
 
-class DOMHelper
+class DOM
 {
 	/**
 	 * DOM Document object

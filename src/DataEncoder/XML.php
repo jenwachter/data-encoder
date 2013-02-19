@@ -2,7 +2,7 @@
 
 namespace DataEncoder;
 
-class DataEncoder
+class XML implements Interfaces\Encoder
 {
 	/**
 	 * DOM Document object
@@ -23,18 +23,6 @@ class DataEncoder
 	protected $data;
 
 	/**
-	 * The RSS DOM object, if applicable
-	 * @var boolean
-	 */
-	protected $rss = null;
-
-	/**
-	 * The RSS channel DOM object, if applicable
-	 * @var boolean
-	 */
-	protected $channel = null;
-
-	/**
 	 * These array keys will trigger a <link> element if the
 	 * value is not an array. Key: array key; Value: link rel.
 	 * 
@@ -49,14 +37,19 @@ class DataEncoder
 		"comments" => "comments"
 	);
 
-
 	public function __construct($data)
 	{
 		$this->data = $this->objectToArray($data);
 		$this->dom = new \DOMDocument("1.0", "utf-8");
-		$this->domHelper = new \DataEncoder\Utilities\DOMHelper($this->dom);
+		$this->domHelper = new \DataEncoder\Utilities\DOM($this->dom);
 	}
 
+	/**
+	 * Recursivly checks a given varaible and converts any
+	 * object to an array.
+	 * @param  mixed $data Object or array
+	 * @return array
+	 */
 	protected function objectToArray($data) {
 		if (is_object($data)) {
 		    $data = get_object_vars($data);
@@ -81,36 +74,9 @@ class DataEncoder
 		$this->linkTriggers[$key] = $rel;
 	}
 
-	/**
-	 * Designate this XML as an RSS feed.
-	 * 
-	 * @param  string $title         The name of the channel.
-	 * @param  string $link          The URL to the website cooresponding to this channel.
-	 * @param  string $description   Description of the channel.
-	 * @param  array  $otherElements Associative array of other channel elements
-	 *                               to include. "element" => "value"
-	 * @return self
-	 */
-	public function rss($title, $link, $description, $otherElements = array())
-	{
-		$this->rss = $this->domHelper->createElement("rss", $this->dom, null, array("version" => "2.0"));
-		$this->channel = $this->domHelper->createElement("channel", $this->rss);
-
-		$channelElements = array(
-			"title" => $title,
-			"link" => $link,
-			"description" => $description
-		);
-
-		$channelElements = array_merge($channelElements, $otherElements);
-		$this->addElements($channelElements, $this->channel);
-
-		return $this;
-	}
-
 	public function render()
 	{
-		$this->parse();
+		$this->encode();
 		
 		$this->dom->formatOutput = true;
 		$this->dom->preserveWhiteSpace = false; 
@@ -119,14 +85,10 @@ class DataEncoder
 		echo $this->dom->saveXML();
 	}
 
-	protected function parse()
+	protected function encode()
 	{
-		if ($this->rss) {
-			$this->addElements($this->data, $this->channel, "item");
-		} else {
-			$bind = $this->domHelper->createElement("feed", $this->dom);
-			$this->addElements($this->data, $bind);
-		}
+		$bind = $this->domHelper->createElement("feed", $this->dom);
+		$this->addElements($this->data, $bind);
 	}
 
 	/**
@@ -172,7 +134,7 @@ class DataEncoder
 				$item = $this->domHelper->createElement($key, $bind);
 				$this->encodeArray($value, $item);
 			} else {
-				if (!$this->rss && in_array($key, array_keys($this->linkTriggers))) {
+				if (in_array($key, array_keys($this->linkTriggers))) {
 					$rel = $this->linkTriggers[$key];
 					$this->domHelper->createElement("link", $bind, $value, array("rel" => $rel));
 				} else {
