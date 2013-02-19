@@ -24,7 +24,7 @@ class XML implements Interfaces\Encoder
 
 	/**
 	 * These array keys will trigger a <link> element if the
-	 * value is not an array. Key: array key; Value: link rel.
+	 * value is not an array. arrayKeyTrigger => linkRel
 	 * 
 	 * @var array
 	 */
@@ -128,7 +128,6 @@ class XML implements Interfaces\Encoder
 		foreach ($array as $key => $value) {
 
 			$key = $singular ? $singular : $key;
-			$value = is_object($value) ? $value : $value;
 
 			if (is_array($value)) {
 				$item = $this->domHelper->createElement($key, $bind);
