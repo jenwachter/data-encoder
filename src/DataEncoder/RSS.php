@@ -66,8 +66,8 @@ class RSS extends XML
 	 * @param array 	$itemElements    	An array of elements to include in each data item;
 	 *                                 		for example, title, link, author, etc...
 	 * @param array 	$data            	An array of items in the feed
-	 * @param array  	$dataMap         	An associative array mapping RSS-specific fields to
-	 *                                  	fields in the passed $data array.
+	 * @param array  	$dataMap         	An associative array mapping fields in the items
+	 *                                  	passed $data array to RSS-specific fields.
 	 *                                  	"UserField" => "RSSField"
 	 *                                  	For example:
 	 *                                  	$dataMap = array(
