@@ -94,7 +94,7 @@ class RSS extends XML
 	{
 		$this->rss = $this->domHelper->createElement("rss", $this->dom, null, array("version" => $this->version));
 		$this->channel = $this->domHelper->createElement("channel", $this->rss);
-		$this->addElements($this->channelElements, $this->channel);
+		$this->addElements($this->channelElements, $this->channel, null, "channel");
 	}
 
 	/**
@@ -114,7 +114,7 @@ class RSS extends XML
 	 * @param  string $key 		Override the item's key
 	 * @return null
 	 */
-	protected function addElements($array, $bind, $keyOverride = null)
+	protected function addElements($array, $bind, $keyOverride = null, $type = "item")
 	{
 		foreach ($array as $key => $value) {
 			
@@ -124,7 +124,7 @@ class RSS extends XML
 
 			if (is_array($value)) {
 				$singular = !$this->hasSingularIdentifier($value) ? \DataEncoder\Utilities\Inflector::singularize($key) : null;
-				$this->encodeArray($value, $item, $singular);
+				$this->encodeArray($value, $item, $singular, $type);
 			} else {
 				if (in_array($key, $this->dateElements)) {
 					$value = date("r", $value);
@@ -142,19 +142,22 @@ class RSS extends XML
 	 * @param  object $bind 	Parent object to bind the new element to
 	 * @return null
 	 */
-	protected function encodeArray($array, $bind, $keyOverride = null)
+	protected function encodeArray($array, $bind, $keyOverride = null, $type = "item")
 	{
 		foreach ($array as $key => $value) {
 
-			$key = !empty($this->dataMap[$key]) ? $this->dataMap[$key] : $key;
+			// only data-map and restrict items elements, not channel elements
+			if ($type == "item") {
+				$key = !empty($this->dataMap[$key]) ? $this->dataMap[$key] : $key;
 
-			if (!in_array($key, $this->itemElements)) {
-				continue;
+				if (!in_array($key, $this->itemElements)) {
+					continue;
+				}
 			}
 
 			if (is_array($value)) {
 				$item = $this->domHelper->createElement($key, $bind);
-				$this->encodeArray($value, $item);
+				$this->encodeArray($value, $item, $type);
 			} else {
 				if (in_array($key, $this->dateElements)) {
 					$value = date("r", $value);
