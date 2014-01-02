@@ -103,7 +103,9 @@ class RSS extends XML
 	 */
 	protected function encode()
 	{
-		$this->addElements($this->data, $this->channel, "item");
+		if (is_array($this->data)) {
+			$this->addElements($this->data, $this->channel, "item");
+		}
 	}
 
 	/**

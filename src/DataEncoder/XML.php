@@ -88,7 +88,10 @@ class XML implements Interfaces\Encoder
 	protected function encode()
 	{
 		$bind = $this->domHelper->createElement("feed", $this->dom);
-		$this->addElements($this->data, $bind);
+
+		if (is_array($this->data)) {
+			$this->addElements($this->data, $bind);
+		}
 	}
 
 	/**
